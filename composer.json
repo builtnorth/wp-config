@@ -1,6 +1,6 @@
 {
     "name": "builtnorth/wp-config",
-    "description": "Adds configuration functionality to WordPress. Loosely based off of Roots/WPConfig.",
+    "description": "Adds configuration functionality to WordPress. Based off of Roots/WPConfig.",
     "type": "library",
     "license": "GPL-2.0-or-later",
     "authors": [
