@@ -1,0 +1,25 @@
+{
+    "name": "builtnorth/wp-config",
+    "description": "Adds configuration functionality to WordPress. Loosely based off of Roots/WPConfig.",
+    "type": "library",
+    "license": "GPL-2.0-or-later",
+    "authors": [
+        {
+            "name": "Built North",
+            "homepage": "https://builtnorth.co"
+        },
+        {
+            "name": "Dan Northern",
+            "homepage": "https://dannorthern.com"
+        }
+    ],
+    "require": {
+        "php": ">=8.1",
+        "vlucas/phpdotenv": "^5.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "BuiltNorth\\WPConfig\\": "inc/"
+        }
+    }
+}
