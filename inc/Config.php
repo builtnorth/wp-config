@@ -9,7 +9,7 @@ use RuntimeException;
  * Configuration Class
  *
  * Handles WordPress configuration management through a singleton pattern.
- * Provides methods for setting, getting, and defining configuration values.
+ * Inspired by Roots/Bedrock but with our own implementation.
  *
  * @package BuiltNorth\WPConfig
  * @since 1.0.0
@@ -22,10 +22,11 @@ class Config
 	/** @var array Configuration storage */
 	private array $config = [];
 
+	/** @var array Required environment variables */
+	private array $required = ['WP_HOME'];
+
 	/**
 	 * Get singleton instance of Config.
-	 *
-	 * @return self
 	 */
 	public static function getInstance(): self
 	{
@@ -36,14 +37,57 @@ class Config
 	}
 
 	/**
-	 * Set a configuration value.
-	 *
-	 * @param string $key Configuration key
-	 * @param mixed $value Configuration value
-	 * @throws InvalidArgumentException If key is empty
-	 * @return void
+	 * Static interface for define
 	 */
-	public function set(string $key, mixed $value): void
+	public static function define(string $key, mixed $value): void
+	{
+		self::getInstance()->set($key, $value);
+	}
+
+	/**
+	 * Static interface for get
+	 */
+	public static function get(string $key, mixed $default = null): mixed
+	{
+		return self::getInstance()->getValue($key, $default);
+	}
+
+	/**
+	 * Apply all configurations as WordPress constants
+	 */
+	public static function apply(): void
+	{
+		$instance = self::getInstance();
+		foreach ($instance->all() as $key => $value) {
+			$instance->defineConstant($key, $value);
+		}
+	}
+
+	/**
+	 * Check required environment variables
+	 *
+	 * @throws RuntimeException if required variables are missing
+	 */
+	public static function requireVars(array $vars): void
+	{
+		$missing = [];
+		foreach ($vars as $var) {
+			if (!env($var)) {
+				$missing[] = $var;
+			}
+		}
+
+		if (!empty($missing)) {
+			throw new RuntimeException(
+				sprintf('Required environment variables are missing: %s', implode(', ', $missing))
+			);
+		}
+	}
+
+	/**
+	 * Set a configuration value.
+	 */
+	private function set(string $key, mixed $value): void
 	{
 		if (empty($key)) {
 			throw new InvalidArgumentException('Configuration key cannot be empty');
@@ -54,13 +98,8 @@ class Config
 
 	/**
 	 * Get a configuration value.
-	 *
-	 * @param string $key Configuration key
-	 * @param mixed|null $default Default value if key doesn't exist
-	 * @throws InvalidArgumentException If key is empty
-	 * @return mixed
 	 */
-	public function get(string $key, mixed $default = null): mixed
+	private function getValue(string $key, mixed $default = null): mixed
 	{
 		if (empty($key)) {
 			throw new InvalidArgumentException('Configuration key cannot be empty');
@@ -71,14 +110,8 @@ class Config
 
 	/**
 	 * Define a WordPress constant if it doesn't exist.
-	 *
-	 * @param string $key Constant name
-	 * @param mixed $value Constant value
-	 * @throws InvalidArgumentException If key is empty
-	 * @throws RuntimeException If constant definition fails
-	 * @return void
 	 */
-	public function define(string $key, mixed $value): void
+	private function defineConstant(string $key, mixed $value): void
 	{
 		if (empty($key)) {
 			throw new InvalidArgumentException('Constant name cannot be empty');
@@ -92,27 +125,9 @@ class Config
 	}
 
 	/**
-	 * Check if a configuration key exists.
-	 *
-	 * @param string $key Configuration key
-	 * @throws InvalidArgumentException If key is empty
-	 * @return bool
-	 */
-	public function has(string $key): bool
-	{
-		if (empty($key)) {
-			throw new InvalidArgumentException('Configuration key cannot be empty');
-		}
-
-		return isset($this->config[$key]);
-	}
-
-	/**
 	 * Get all configuration values.
-	 *
-	 * @return array
 	 */
-	public function all(): array
+	private function all(): array
 	{
 		return $this->config;
 	}
