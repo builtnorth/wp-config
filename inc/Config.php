@@ -7,7 +7,6 @@ namespace BuiltNorth\WPConfig;
 use InvalidArgumentException;
 use RuntimeException;
 
-
 /**
  * Configuration Class
  *
@@ -36,24 +35,30 @@ class Config
 	/**
 	 * Get a configuration value.
 	 */
-	public static function get(string $key, mixed $default = null): mixed
+	public static function get(string $key): mixed
 	{
-		if (empty($key)) {
-			throw new InvalidArgumentException('Configuration key cannot be empty');
-		}
-
 		if (!array_key_exists($key, self::$configMap)) {
-			if ($default !== null) {
-				return $default;
-			}
-			throw new RuntimeException("'$key' has not been defined.");
+			$class = self::class;
+			throw new RuntimeException("'$key' has not been defined. Use `$class::define('$key', ...)`.");
 		}
 
 		return self::$configMap[$key];
 	}
 
 	/**
+	 * Remove a configuration value.
+	 */
+	public static function remove(string $key): void
+	{
+		unset(self::$configMap[$key]);
+	}
+
+	/**
 	 * Apply all configurations as WordPress constants
+	 *
+	 * We throw an exception if attempting to redefine a constant because a silent
+	 * rejection of a configuration value is unacceptable. This method fails fast
+	 * before undefined behavior can occur due to unexpected configurations.
 	 */
 	public static function apply(): void
 	{
@@ -75,33 +80,6 @@ class Config
 	}
 
 	/**
-	 * Check required environment variables
-	 */
-	public static function requireVars(array $vars): void
-	{
-		$missing = [];
-		foreach ($vars as $var) {
-			if (!env($var)) {
-				$missing[] = $var;
-			}
-		}
-
-		if (!empty($missing)) {
-			throw new RuntimeException(
-				sprintf('Required environment variables are missing: %s', implode(', ', $missing))
-			);
-		}
-	}
-
-	/**
-	 * Remove a configuration value.
-	 */
-	public static function remove(string $key): void
-	{
-		unset(self::$configMap[$key]);
-	}
-
-	/**
 	 * Check if a constant is already defined
 	 */
 	protected static function defined(string $key): bool
@@ -111,6 +89,7 @@ class Config
 				"Aborted trying to redefine constant '$key'. `define('$key', ...)` has already occurred elsewhere."
 			);
 		}
+
 		return false;
 	}
 }
