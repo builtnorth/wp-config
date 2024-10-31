@@ -24,17 +24,6 @@ Config::define('DB_NAME', env('DB_NAME'));
 Config::apply();
 ```
 
-### Check Required Environment Variables
-
-```php
-Config::requireVars([
-    'WP_HOME',
-    'DB_NAME',
-    'DB_USER',
-    'DB_PASSWORD'
-]);
-```
-
 ### Get Configuration Values
 
 ```php
