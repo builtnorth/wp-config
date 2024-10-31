@@ -9,32 +9,6 @@ use RuntimeException;
 
 
 /**
- * Get an environment variable
- */
-function env(string $key, mixed $default = null): mixed
-{
-	$value = $_ENV[$key] ?? $_SERVER[$key] ?? getenv($key);
-
-	if ($value === false) {
-		return $default;
-	}
-
-	switch (strtolower($value)) {
-		case 'true':
-		case '(true)':
-			return true;
-		case 'false':
-		case '(false)':
-			return false;
-		case 'null':
-		case '(null)':
-			return null;
-	}
-
-	return $value;
-}
-
-/**
  * Configuration Class
  *
  * Handles WordPress configuration management.
