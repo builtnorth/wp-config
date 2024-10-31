@@ -14,16 +14,16 @@ use RuntimeException;
  * @package BuiltNorth\WPConfig
  * @since 1.0.0
  */
-class Configuration
+class Config
 {
-	/** @var Configuration|null Singleton instance */
-	private static ?Configuration $instance = null;
+	/** @var Config|null Singleton instance */
+	private static ?Config $instance = null;
 
 	/** @var array Configuration storage */
 	private array $config = [];
 
 	/**
-	 * Get singleton instance of Configuration.
+	 * Get singleton instance of Config.
 	 *
 	 * @return self
 	 */
