@@ -1,66 +1,32 @@
-# Environment and Configuration
-.env
-.lando.yml
-
-# Dependencies
-/vendor
-/wordpress
-/app
-/wp
-node_modules
-bower_components
-
-# Build and Compilation
+# Various things
 .sass-cache
-dist
-backstop_data
+node_modules
+.ftppass
+sftpCache.json
+bower_components
+.DS_Store
+bin/tasks
 _srcMaps/
-build
 
-# WordPress Core
-/wordpress/wp-admin/
-/wordpress/wp-includes/
-/wordpress/wp-*.php
-/xmlrpc.php
-/license.txt
-/readme.html
+# Exclude composer dependencies in the vendor directory
+/vendor
+composer.lock
 
-# WordPress Content
-wp-content/*
-!wp-content/mu-plugins/
-!wp-content/themes/
-!wp-content/plugins/
+# Log files
+*.log
 
-# Plugins (Allow only custom plugins)
-wp-content/plugins/*
-!wp-content/plugins/built*
-!wp-content/plugins/compass*
-!wp-content/plugins/polaris*
-!wp-content/plugins/site-core
-
-# Default Themes
-wp-content/themes/twenty*
-
-# Uploads and Generated Content
+#various
 wp-content/uploads/sites/*/gravity_forms
 wp-content/uploads/sites/*/wp-migrate-db
 wp-content/uploads/wpo-plugins-tables-list.json
 
-# htaccess
-.htaccess
-/wp-content/.htaccess
 
-# Logs and Backups
-*.log
-*.sql
-*.sql.gz
-db_backup.*
-/imagify-backup
 
-# Allow seeder db
-!db-seeder-export.sql
+# Project Files
+dist
+backstop_data
 
-# Editor and IDE Files
+# Editors
 *.esproj
 *.tmproj
 *.tmproject
@@ -70,21 +36,14 @@ tmtags
 Session.vim
 *.swp
 .vscode
-*.code-workspace
 
-# OS Generated Files
-## Mac
+# Mac OSX
 .DS_Store
 ._*
 .Spotlight-V100
 .Trashes
 
-## Windows
+# Windows
 Thumbs.db
 Desktop.ini
-
-# Miscellaneous
-.ftppass
-sftpCache.json
-bin/tasks
-debug.log
+/debug.log
