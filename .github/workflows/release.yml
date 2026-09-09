@@ -28,3 +28,4 @@ jobs:
     permissions:
     secrets: inherit
       contents: write
+    secrets: inherit
