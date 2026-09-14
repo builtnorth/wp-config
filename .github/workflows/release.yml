@@ -1,31 +1,30 @@
 name: Release
 
 on:
-  push:
-    tags:
-      - 'v*.*.*'
-  workflow_dispatch:
-    inputs:
-      version:
-        description: 'Release version (e.g., 1.0.0)'
-        required: true
-        type: string
-      prerelease:
-        description: 'Is this a pre-release?'
-        required: false
-        type: boolean
-        default: false
+    push:
+        tags:
+            - "v*.*.*"
+    workflow_dispatch:
+        inputs:
+            version:
+                description: "Release version (e.g., 1.0.0)"
+                required: true
+                type: string
+            prerelease:
+                description: "Is this a pre-release?"
+                required: false
+                type: boolean
+                default: false
 
 jobs:
-  release:
-    uses: builtnorth/.github/.github/workflows/composer-package-release.yml@main
-    with:
-      package-name: 'wp-config'
-      package-display-name: 'WP Config'
-      composer-namespace: 'builtnorth/wp-config'
-      version: ${{ inputs.version }}
-      prerelease: ${{ inputs.prerelease }}
-    permissions:
-    secrets: inherit
-      contents: write
-    secrets: inherit
+    release:
+        uses: builtnorth/.github/.github/workflows/composer-package-release.yml@main
+        with:
+            package-name: "wp-config"
+            package-display-name: "WP Config"
+            composer-namespace: "builtnorth/wp-config"
+            version: ${{ inputs.version }}
+            prerelease: ${{ inputs.prerelease }}
+        permissions:
+            contents: write
+        secrets: inherit
