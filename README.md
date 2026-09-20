@@ -1,6 +1,8 @@
 # Built North WP Config
 
-A WordPress configuration management library based off of [roots/wp-config](https://github.com/roots/wp-config).
+A WordPress configuration management library based off of [roots/wp-config](https://github.com/roots/wp-config) 1.x.
+
+This package only provides the `Config` class (`define` / `get` / `remove` / `apply`). Environment loading (`vlucas/phpdotenv`, `env()` helpers, etc.) belongs in your site bootstrap — the same split Roots used in 1.x.
 
 ## Installation
 
@@ -15,27 +17,28 @@ composer require builtnorth/wp-config
 ```php
 use BuiltNorth\WPConfig\Config;
 
-// Set configurations
+// Set configurations (values usually come from your own env loader)
 Config::define('WP_DEBUG', true);
-Config::define('WP_HOME', env('WP_HOME'));
-Config::define('DB_NAME', env('DB_NAME'));
+Config::define('WP_HOME', 'https://example.test');
+Config::define('DB_NAME', 'wordpress');
 
-// Apply them
+// Apply them as PHP constants
 Config::apply();
 ```
 
 ### Get Configuration Values
 
+Values are read from the in-memory map (before or after `apply()`). There is no default argument — missing keys throw.
+
 ```php
-$debug = Config::get('WP_DEBUG', false);
+$debug = Config::get('WP_DEBUG');
 $home = Config::get('WP_HOME');
 ```
 
 ## Requirements
 
--   PHP 7.4+
--   WordPress
--   Composer
+- PHP 8.0+
+- Composer
 
 ## Disclaimer
 
