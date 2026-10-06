@@ -89,16 +89,12 @@ class ConfigTest extends TestCase {
 	}
 
 	/**
-	 * Test define does not override existing values in configMap
+	 * Test define overwrites prior configMap entries when no PHP constant exists yet
+	 * (Bedrock/Roots 1.x behavior — lets environment files override defaults).
 	 */
-	public function test_define_does_not_override_existing_values() {
+	public function test_define_overwrites_existing_config_map_values() {
 		Config::define( 'TEST_KEY', 'original_value' );
-		// Trying to define again with a different value
 		Config::define( 'TEST_KEY', 'new_value' );
-		// Since TEST_KEY is not a PHP constant yet, and configMap check happens after defined() check,
-		// the value should actually be overridden to 'new_value'
-		// The logic is: self::defined($key) or self::$configMap[$key] = $value;
-		// defined() returns false (no PHP constant), so it sets the value
 		$this->assertEquals( 'new_value', Config::get( 'TEST_KEY' ) );
 	}
 
@@ -125,27 +121,11 @@ class ConfigTest extends TestCase {
 	}
 
 	/**
-	 * Test remove non-existent key
+	 * Test remove non-existent key does not throw
 	 */
 	public function test_remove_non_existent_key() {
-		// Should not throw exception
+		$this->expectNotToPerformAssertions();
 		Config::remove( 'NON_EXISTENT_KEY' );
-		$this->assertTrue( true ); // Assert that we got here without exception
-	}
-
-	/**
-	 * Test config map stores values correctly
-	 */
-	public function test_config_map_stores_values() {
-		// Test that values are stored in the config map
-		Config::define( 'TEST_KEY', 'test_value' );
-		$this->assertEquals( 'test_value', Config::get( 'TEST_KEY' ) );
-		
-		Config::remove( 'TEST_KEY' );
-		
-		// After removal, getting should throw exception
-		$this->expectException( RuntimeException::class );
-		Config::get( 'TEST_KEY' );
 	}
 
 	/**
@@ -161,6 +141,32 @@ class ConfigTest extends TestCase {
 		$this->assertEquals( 'test_value', TEST_CONSTANT );
 		$this->assertTrue( defined( 'ANOTHER_CONSTANT' ) );
 		$this->assertEquals( 42, ANOTHER_CONSTANT );
+	}
+
+	/**
+	 * Test apply succeeds when a PHP constant already exists with the same value
+	 */
+	public function test_apply_allows_existing_constant_with_same_value() {
+		Config::define( 'APPLY_SAME_VALUE_CONST', 'same_value' );
+		define( 'APPLY_SAME_VALUE_CONST', 'same_value' );
+
+		Config::apply();
+
+		$this->assertTrue( defined( 'APPLY_SAME_VALUE_CONST' ) );
+		$this->assertEquals( 'same_value', APPLY_SAME_VALUE_CONST );
+	}
+
+	/**
+	 * Test apply throws when a PHP constant already exists with a different value
+	 */
+	public function test_apply_throws_for_existing_constant_with_different_value() {
+		Config::define( 'APPLY_DIFF_VALUE_CONST', 'map_value' );
+		define( 'APPLY_DIFF_VALUE_CONST', 'other_value' );
+
+		$this->expectException( RuntimeException::class );
+		$this->expectExceptionMessage( "Aborted trying to redefine constant 'APPLY_DIFF_VALUE_CONST'" );
+
+		Config::apply();
 	}
 
 	/**
@@ -211,39 +217,5 @@ class ConfigTest extends TestCase {
 		foreach ( $configs as $key => $value ) {
 			$this->assertEquals( $value, Config::get( $key ) );
 		}
-	}
-
-	/**
-	 * Test environment-based configuration
-	 */
-	public function test_environment_based_configuration() {
-		// Simulate different environments
-		$env = 'development';
-		
-		if ( $env === 'development' ) {
-			Config::define( 'TEST_ENV_DEBUG', true );
-			Config::define( 'TEST_ENV_DISPLAY', true );
-		} else {
-			Config::define( 'TEST_ENV_DEBUG', false );
-			Config::define( 'TEST_ENV_DISPLAY', false );
-		}
-		
-		$this->assertTrue( Config::get( 'TEST_ENV_DEBUG' ) );
-		$this->assertTrue( Config::get( 'TEST_ENV_DISPLAY' ) );
-	}
-
-	/**
-	 * Test get_env helper functionality
-	 */
-	public function test_get_env_helper() {
-		// Set an environment variable
-		putenv( 'TEST_ENV_VAR=test_value' );
-		
-		// Test that we can retrieve it
-		$value = getenv( 'TEST_ENV_VAR' );
-		$this->assertEquals( 'test_value', $value );
-		
-		// Clean up
-		putenv( 'TEST_ENV_VAR' );
 	}
 }
