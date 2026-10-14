@@ -29,7 +29,9 @@ class Config
 			throw new InvalidArgumentException('Configuration key cannot be empty');
 		}
 
-		self::defined($key) or self::$configMap[$key] = $value;
+		if (!self::defined($key)) {
+			self::$configMap[$key] = $value;
+		}
 	}
 
 	/**
@@ -75,7 +77,9 @@ class Config
 
 		// If all is well, apply the configMap
 		foreach (self::$configMap as $key => $value) {
-			defined($key) or define($key, $value);
+			if (!defined($key)) {
+				define($key, $value);
+			}
 		}
 	}
 
