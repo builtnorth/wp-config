@@ -40,12 +40,25 @@ $home = Config::get('WP_HOME');
 - PHP 8.1+
 - Composer
 
-## Disclaimer
-
-This software is provided "as is", without warranty of any kind, express or implied. In no event shall the authors or copyright holders be liable for any claim, damages, or other liability, whether in an action of contract, tort, or otherwise, arising from, out of, or in connection with the software or the use or other dealings in the software.
-
-Use at your own risk.
-
 ## License
 
 GPL-3.0-or-later — see `LICENSE`.
+
+## Disclaimer
+
+This software is provided "as is", without warranty of any kind, express or
+implied, including the warranties of merchantability and fitness for a
+particular purpose. To the extent permitted by applicable law, Built North LLC
+(Kitaris) and its contributors are not liable for any direct, indirect,
+incidental, or consequential damages arising from its use or inability to use
+it, including loss of data, revenue, or site availability.
+
+The software does not guarantee that your site is secure, ranks in search
+results, or complies with privacy or other laws; that remains the site owner's
+responsibility. AI-generated content can be inaccurate and should be reviewed
+before publishing. Third-party services the software connects to are governed
+by their own terms.
+
+Keep a current backup and test changes on a staging site before applying them
+to a live site. See sections 15 and 16 of the GNU General Public License,
+version 3, for the full terms.
