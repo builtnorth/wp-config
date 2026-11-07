@@ -37,7 +37,7 @@ $home = Config::get('WP_HOME');
 
 ## Requirements
 
-- PHP 8.1+
+- PHP 8.2+
 - Composer
 
 ## License
