@@ -40,7 +40,7 @@
     "phpcs": "phpcs",
     "phpcs:summary": "phpcs --report=summary",
     "phpcbf": "phpcbf",
-    "phpcompat": "phpcs -p inc --standard=PHPCompatibility --runtime-set testVersion 8.1-"
+    "phpcompat": "phpcs -p inc --standard=PHPCompatibility --runtime-set testVersion 8.2-"
   },
   "config": {
     "optimize-autoloader": true,
